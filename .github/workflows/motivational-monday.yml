@@ -1,0 +1,25 @@
+name: Motivational Monday
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Lunes a las 9 AM UTC
+  workflow_dispatch:  # Permite ejecución manual para probar
+
+jobs:
+  motivate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Show motivational message
+        run: |
+          echo "🌟 ¡Buenos días! 🌟"
+          echo "Hoy es lunes y es una nueva oportunidad para brillar."
+          echo "¡Tú puedes con todo este día! 💪"
+          echo ""
+      
+      - name: Show last 5 commits
+        run: |
+          echo "📊 Últimos 5 commits del repositorio:"
+          echo "====================================="
+          git log --oneline -5
