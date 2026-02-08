@@ -1,0 +1,48 @@
+name: Multi-OS Test
+on: [push, workflow_dispatch]
+
+jobs:
+  test-multi-os:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            shell: bash
+          - os: windows-latest
+            shell: pwsh  # PowerShell para Windows
+          - os: macos-latest
+            shell: bash
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - name: Show OS information
+        shell: ${{ matrix.shell }}
+        run: |
+          echo "🖥️  Running on ${{ matrix.os }}"
+          echo "================================="
+          
+          # Comando para detectar sistema operativo
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            # Windows
+            ver
+            echo "Sistema: Windows"
+          else
+            # Linux/macOS
+            uname -a
+            if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+              echo "Sistema: Ubuntu Linux"
+              lsb_release -a 2>/dev/null || echo "lsb_release no disponible"
+            else
+              echo "Sistema: macOS"
+              sw_vers 2>/dev/null || echo "sw_vers no disponible"
+            fi
+          fi
+          
+          echo ""
+          echo "📂 Directorio actual:"
+          pwd
+          echo ""
+          echo "📋 Contenido (primeros 5 archivos):"
+          ls -la | head -6
