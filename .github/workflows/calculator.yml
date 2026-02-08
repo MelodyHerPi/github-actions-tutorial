@@ -1,0 +1,70 @@
+name: Calculator
+on:
+  workflow_dispatch:
+    inputs:
+      number1:
+        description: 'First number'
+        required: true
+        type: number
+      number2:
+        description: 'Second number'
+        required: true
+        type: number
+      operation:
+        description: 'Operation (sum, subtract, multiply, divide, all)'
+        required: false
+        default: 'all'
+
+jobs:
+  calculate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show inputs
+        run: |
+          echo "📝 Inputs recibidos:"
+          echo "Number 1: ${{ github.event.inputs.number1 }}"
+          echo "Number 2: ${{ github.event.inputs.number2 }}"
+          echo "Operation: ${{ github.event.inputs.operation }}"
+          echo ""
+      
+      - name: Calculate operations
+        run: |
+          num1=${{ github.event.inputs.number1 }}
+          num2=${{ github.event.inputs.number2 }}
+          op="${{ github.event.inputs.operation }}"
+          
+          echo "🧮 Resultados:"
+          echo "=============="
+          
+          # Suma
+          if [[ "$op" == "sum" || "$op" == "all" ]]; then
+            suma=$((num1 + num2))
+            echo "➕ Suma: $num1 + $num2 = $suma"
+          fi
+          
+          # Resta
+          if [[ "$op" == "subtract" || "$op" == "all" ]]; then
+            resta=$((num1 - num2))
+            echo "➖ Resta: $num1 - $num2 = $resta"
+          fi
+          
+          # Multiplicación
+          if [[ "$op" == "multiply" || "$op" == "all" ]]; then
+            multiplicacion=$((num1 * num2))
+            echo "✖️  Multiplicación: $num1 * $num2 = $multiplicacion"
+          fi
+          
+          # División (con verificación de división por cero)
+          if [[ "$op" == "divide" || "$op" == "all" ]]; then
+            if [[ $num2 -eq 0 ]]; then
+              echo "❌ División: No se puede dividir por cero"
+            else
+              division=$((num1 / num2))
+              resto=$((num1 % num2))
+              echo "➗ División: $num1 / $num2 = $division"
+              echo "   Resto: $resto"
+            fi
+          fi
+          
+          echo ""
+          echo "✅ Cálculos completados!"
